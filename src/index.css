@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Segoe UI", "Tahoma", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-accurate-blue: #0054a6;
+  --color-accurate-bg: #f0f0f0;
+  --color-accurate-border: #999999;
+}
+
+@layer base {
+  body {
+    @apply font-sans bg-[#f0f0f0] text-gray-900 text-[13px];
+  }
+}
+
+@layer components {
+  .desktop-card {
+    @apply bg-white border border-[#999999] shadow-[2px_2px_0px_rgba(0,0,0,0.1)];
+  }
+
+  .desktop-header {
+    @apply bg-[#0054a6] text-white px-2 py-1 flex items-center font-bold text-sm;
+  }
+}
