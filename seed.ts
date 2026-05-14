@@ -69,7 +69,9 @@ async function seed() {
           warehouse_id CHAR(36) NOT NULL,
           item_id CHAR(36) NOT NULL,
           qty DECIMAL(15,4) DEFAULT 0,
-          PRIMARY KEY (warehouse_id, item_id)
+          PRIMARY KEY (warehouse_id, item_id),
+          FOREIGN KEY (warehouse_id) REFERENCES warehouses(id) ON DELETE CASCADE,
+          FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
         )
      `);
 
@@ -83,7 +85,8 @@ async function seed() {
           address TEXT,
           npwp VARCHAR(50),
           term_days INT DEFAULT 0,
-          is_active BOOLEAN DEFAULT TRUE
+          is_active BOOLEAN DEFAULT TRUE,
+          INDEX idx_partner_type (type)
         )
      `);
 
@@ -93,13 +96,19 @@ async function seed() {
           date DATE NOT NULL,
           reference_no VARCHAR(50) NOT NULL UNIQUE,
           delivery_order_no VARCHAR(50),
-          type ENUM('IN','OUT','TRANSFER','ADJUSTMENT') NOT NULL,
+          type ENUM('IN','OUT','TRANSFER','ADJUSTMENT', 'REJECT') NOT NULL,
           source_warehouse_id CHAR(36) NOT NULL,
           target_warehouse_id CHAR(36),
           partner_id CHAR(36),
           notes TEXT,
           created_by CHAR(36),
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (source_warehouse_id) REFERENCES warehouses(id),
+          FOREIGN KEY (target_warehouse_id) REFERENCES warehouses(id),
+          FOREIGN KEY (partner_id) REFERENCES partners(id),
+          FOREIGN KEY (created_by) REFERENCES users(id),
+          INDEX idx_transaction_date (date),
+          INDEX idx_transaction_type (type)
         )
      `);
 
@@ -111,7 +120,10 @@ async function seed() {
           qty DECIMAL(15,4) NOT NULL,
           unit VARCHAR(20) NOT NULL,
           conversion_ratio DECIMAL(10,4) DEFAULT 1,
-          note VARCHAR(255)
+          note VARCHAR(255),
+          FOREIGN KEY (transaction_id) REFERENCES transactions(id) ON DELETE CASCADE,
+          FOREIGN KEY (item_id) REFERENCES items(id),
+          INDEX idx_tx_item (item_id)
         )
      `);
 
